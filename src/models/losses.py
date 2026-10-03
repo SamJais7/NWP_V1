@@ -26,7 +26,12 @@ if TORCH_AVAILABLE:
             self.gamma = gamma
             self.reduction = reduction
 
-        def forward(self, inputs: torch.Tensor, targets: torch.Tensor) -> torch.Tensor:
+        def forward(self, inputs, targets) -> torch.Tensor:
+            if not isinstance(inputs, torch.Tensor):
+                inputs = torch.as_tensor(inputs, dtype=torch.float32)
+            if not isinstance(targets, torch.Tensor):
+                targets = torch.as_tensor(targets, dtype=torch.float32)
+
             p = torch.sigmoid(inputs)
             ce_loss = F.binary_cross_entropy_with_logits(inputs, targets, reduction="none")
             p_t = p * targets + (1 - p) * (1 - targets)
@@ -46,10 +51,15 @@ if TORCH_AVAILABLE:
         """Binary Cross Entropy with positive weight multiplier."""
         def __init__(self, pos_weight: float = 8.0):
             super().__init__()
-            self.pos_weight = torch.tensor([pos_weight])
+            self.pos_weight = torch.tensor([pos_weight], dtype=torch.float32)
             self.bce = nn.BCEWithLogitsLoss(pos_weight=self.pos_weight)
 
-        def forward(self, inputs: torch.Tensor, targets: torch.Tensor) -> torch.Tensor:
+        def forward(self, inputs, targets) -> torch.Tensor:
+            if not isinstance(inputs, torch.Tensor):
+                inputs = torch.as_tensor(inputs, dtype=torch.float32)
+            if not isinstance(targets, torch.Tensor):
+                targets = torch.as_tensor(targets, dtype=torch.float32)
+
             if self.pos_weight.device != inputs.device:
                 self.pos_weight = self.pos_weight.to(inputs.device)
                 self.bce.pos_weight = self.pos_weight

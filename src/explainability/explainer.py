@@ -37,23 +37,19 @@ class SynopticPatternClassifier:
             tags.append("Western Disturbance Trough")
             primary_regime = "WESTERN_DISTURBANCE"
             regime_desc = "Mid-latitude upper-tropospheric westerly trough propagating across NW India."
-        
-        if llj >= 16.5:
+        elif llj >= 16.5:
             tags.append("Somali LLJ Surge")
             primary_regime = "SOMALI_JET_SURGE"
             regime_desc = "Intensified Low-Level Jet (LLJ > 16.5 m/s) driving heavy Western Ghats moisture flux."
-
-        if trough_lat >= 26.5 and apcp < 8.0:
+        elif trough_lat >= 26.5 and apcp < 8.0:
             tags.append("Monsoon Break Phase")
             primary_regime = "MONSOON_BREAK"
             regime_desc = "Monsoon trough axis displaced north toward the Himalayan foothills; dry spell across central plains."
-
-        if apcp >= 35.0 or (features.get("zeta850_mean", 0.0) > 4.0):
+        elif apcp >= 35.0 or (features.get("zeta850_mean", 0.0) > 4.0):
             tags.append("Bay of Bengal Depression / Low")
             primary_regime = "BAY_OF_BENGAL_DEPRESSION"
             regime_desc = "Low-pressure system / Monsoon Depression inducing concentrated cyclonic convergence."
-
-        if t2m >= 315.15:  # > 42°C
+        elif t2m >= 315.15:  # > 42°C
             tags.append("Indo-Gangetic Heatwave")
             primary_regime = "PRE_MONSOON_HEATWAVE"
             regime_desc = "Subsidence-induced extreme surface heating over the Indo-Gangetic plains."
