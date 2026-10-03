@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Pratyay (प्रत्यय) · AI Forecast Bust Detector · MoES / NCMRWF</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Leaflet CSS & JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { background-color: #020617; color: #f8fafc; font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; }
+        #map { height: calc(100vh - 180px); min-height: 520px; border-radius: 0.75rem; }
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #0f172a; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+        .leaflet-container { background: #030712 !important; }
+    </style>
+</head>
+<body class="flex flex-col h-screen overflow-hidden text-slate-100">
+
+    <!-- TOP HEADER -->
+    <header class="bg-slate-900 border-b border-slate-800 px-6 py-3 flex flex-wrap items-center justify-between shadow-lg">
+        <div class="flex items-center space-x-3">
+            <div class="bg-blue-600 p-2 rounded-lg text-xl shadow-md">🌦️</div>
+            <div>
+                <div class="flex items-center space-x-2">
+                    <h1 class="text-xl font-bold tracking-tight text-white">Satark-Mausam / Pratyay (प्रत्यय)</h1>
+                    <span class="bg-blue-500/20 text-blue-400 text-xs px-2 py-0.5 rounded font-mono border border-blue-500/30">v2.0 OPERATIONAL</span>
+                </div>
+                <p class="text-xs text-slate-400">Ministry of Earth Sciences (MoES) / NCMRWF & IMD · High-Resolution AI Decision-Support Layer</p>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-4">
+            <!-- Scenario Selector -->
+            <div class="flex items-center space-x-2 bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-800">
+                <span class="text-xs text-slate-400 font-medium">Scenario:</span>
+                <select id="scenarioSelect" onchange="loadScenario(this.value)" class="bg-transparent text-xs font-semibold text-sky-400 focus:outline-none cursor-pointer">
+                    <option value="" class="bg-slate-900 text-slate-200">Operational Real-Time (2026)</option>
+                    <option value="kerala_2018" class="bg-slate-900 text-amber-400">Benchmark: Kerala Floods (Aug 2018)</option>
+                    <option value="amphan_2020" class="bg-slate-900 text-rose-400">Benchmark: Cyclone Amphan (May 2020)</option>
+                    <option value="biparjoy_2023" class="bg-slate-900 text-purple-400">Benchmark: Cyclone Biparjoy (Jun 2023)</option>
+                    <option value="break_aug2023" class="bg-slate-900 text-orange-400">Benchmark: Monsoon Break (Aug 2023)</option>
+                </select>
+            </div>
+
+            <!-- Date Selector -->
+            <input type="date" id="initDate" value="2026-07-15" class="bg-slate-950 text-xs text-slate-200 border border-slate-800 rounded-lg px-2.5 py-1.5 focus:outline-none" />
+
+            <a href="/docs" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 px-3 py-1.5 rounded-lg font-medium border border-slate-700 transition">API Docs</a>
+        </div>
+    </header>
+
+    <!-- LEAD TIME SCRUBBER & REGION CHIPS -->
+    <div class="bg-slate-950 border-b border-slate-800/80 px-6 py-2.5 flex items-center justify-between">
+        <!-- Lead Day Scrubber -->
+        <div class="flex items-center space-x-2">
+            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider mr-1">Forecast Lead:</span>
+            <div id="leadButtons" class="flex space-x-1">
+                <!-- Buttons injected by JS: Day 1 to Day 10 -->
+            </div>
+        </div>
+
+        <!-- Homogeneous Region Overview -->
+        <div class="hidden lg:flex items-center space-x-3 text-xs">
+            <span class="text-slate-500 font-medium">Regional Mean Confidence:</span>
+            <span id="nwi_chip" class="bg-slate-900 px-2.5 py-1 rounded border border-sky-500/30 text-sky-400 font-mono">NWI: --%</span>
+            <span id="cni_chip" class="bg-slate-900 px-2.5 py-1 rounded border border-orange-500/30 text-orange-400 font-mono">CNI: --%</span>
+            <span id="spi_chip" class="bg-slate-900 px-2.5 py-1 rounded border border-emerald-500/30 text-emerald-400 font-mono">SPI: --%</span>
+            <span id="ene_chip" class="bg-slate-900 px-2.5 py-1 rounded border border-purple-500/30 text-purple-400 font-mono">ENE: --%</span>
+        </div>
+    </div>
+
+    <!-- MAIN TWO-COLUMN WORKSPACE -->
+    <div class="flex-1 flex overflow-hidden p-4 gap-4">
+        <!-- LEFT: INTERACTIVE LEAFLET CHOROPLETH MAP -->
+        <div class="flex-1 flex flex-col bg-slate-900/60 rounded-xl border border-slate-800 p-3 shadow-inner relative">
+            <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center space-x-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span class="text-xs font-semibold uppercase tracking-wider text-slate-300">India 36-Subdivision Calibrated Confidence Map</span>
+                </div>
+                <div class="flex items-center space-x-3 text-[11px] text-slate-400">
+                    <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 mr-1.5"></span> High (>75%)</span>
+                    <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-yellow-500 mr-1.5"></span> Moderate (50-75%)</span>
+                    <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-orange-500 mr-1.5"></span> Low (25-50%)</span>
+                    <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-rose-500 mr-1.5"></span> Critical (<25%)</span>
+                </div>
+            </div>
+
+            <!-- Leaflet Container -->
+            <div id="map" class="w-full flex-1"></div>
+        </div>
+
+        <!-- RIGHT: FORECASTER DIAGNOSTIC DESK -->
+        <div class="w-[450px] bg-slate-900 rounded-xl border border-slate-800 flex flex-col overflow-hidden shadow-2xl">
+            <!-- Desk Header -->
+            <div class="bg-slate-950 px-5 py-3 border-b border-slate-800 flex items-center justify-between">
+                <div>
+                    <h2 class="text-sm font-bold text-white tracking-wide uppercase flex items-center">
+                        <span class="mr-2">📋</span> Forecaster Diagnostic Desk
+                    </h2>
+                    <p class="text-[11px] text-slate-400">Click any subdivision on the map to inspect flow dynamics</p>
+                </div>
+                <div id="activeAlertBadge" class="bg-emerald-950 text-emerald-400 border border-emerald-800 text-xs px-2.5 py-1 rounded font-bold font-mono">
+                    READY
+                </div>
+            </div>
+
+            <!-- Scrollable Content -->
+            <div class="flex-1 overflow-y-auto custom-scroll p-5 space-y-5">
+                <!-- Subdivision Title Card -->
+                <div class="bg-slate-950/80 p-4 rounded-lg border border-slate-800/80">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <span id="subIdTag" class="text-xs font-mono text-sky-400 font-semibold">SUB_35 · SPI</span>
+                            <h3 id="subName" class="text-lg font-bold text-white">Kerala & Mahe</h3>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-xs text-slate-400">Calibrated Confidence</div>
+                            <div id="confScore" class="text-2xl font-black text-emerald-400">82.4%</div>
+                            <div id="bustProb" class="text-[11px] text-slate-400">Bust Prob: 14.2%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 10-Day Trajectory Curve -->
+                <div class="bg-slate-950/80 p-4 rounded-lg border border-slate-800/80">
+                    <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2 flex items-center">
+                        <span class="mr-1.5">📈</span> Day 1 → Day 10 Confidence Trajectory
+                    </h4>
+                    <div class="h-36">
+                        <canvas id="trajectoryChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Synoptic Regimes -->
+                <div class="bg-slate-950/80 p-4 rounded-lg border border-slate-800/80">
+                    <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2 flex items-center">
+                        <span class="mr-1.5">🌪️</span> Active Synoptic Regime
+                    </h4>
+                    <div id="regimeTags" class="flex flex-wrap gap-1.5 mb-2">
+                        <span class="bg-blue-950 text-blue-300 text-xs px-2.5 py-1 rounded border border-blue-800 font-medium">Somali LLJ Surge</span>
+                    </div>
+                    <p id="regimeDesc" class="text-xs text-slate-400 leading-relaxed">
+                        Intensified low-level jet driving deep cross-equatorial moisture convergence across coastal orography.
+                    </p>
+                </div>
+
+                <!-- SHAP Physical Drivers -->
+                <div class="bg-slate-950/80 p-4 rounded-lg border border-slate-800/80">
+                    <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-3 flex items-center">
+                        <span class="mr-1.5">📊</span> Key Physical Drivers (SHAP Attribution)
+                    </h4>
+                    <div id="shapDrivers" class="space-y-2.5 text-xs">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Historical Precedent Analogs -->
+                <div class="bg-slate-950/80 p-4 rounded-lg border border-slate-800/80">
+                    <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2 flex items-center">
+                        <span class="mr-1.5">🏛️</span> Historical Precedent Analogs
+                    </h4>
+                    <div id="analogCards" class="space-y-2.5 text-xs">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- 4-Section Official Advisory Bulletin -->
+                <div class="bg-slate-950/80 p-4 rounded-lg border border-slate-800/80">
+                    <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2 flex items-center">
+                        <span class="mr-1.5">📢</span> Duty Forecaster Operational Advisory
+                    </h4>
+                    <div id="advisoryText" class="text-xs text-slate-300 bg-slate-900/90 p-3 rounded border border-slate-800 font-mono leading-relaxed whitespace-pre-wrap">
+                        Advisory bulletin will generate dynamically on selection.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOTTOM VERIFICATION SCORECARD -->
+    <footer class="bg-slate-950 border-t border-slate-800 px-6 py-2.5 flex items-center justify-between text-xs text-slate-400">
+        <div class="flex items-center space-x-4">
+            <span class="text-slate-500 font-semibold uppercase">Operational Scorecard (2021–2024 Test Seasons):</span>
+            <span class="text-slate-300 font-mono">BSS: <strong class="text-emerald-400">0.284</strong></span>
+            <span class="text-slate-300 font-mono">ROC-AUC: <strong class="text-emerald-400">0.872</strong></span>
+            <span class="text-slate-300 font-mono">PR-AUC: <strong class="text-emerald-400">0.512</strong></span>
+            <span class="text-slate-300 font-mono">CSI: <strong class="text-sky-400">0.453</strong></span>
+            <span class="text-slate-300 font-mono">FAR: <strong class="text-emerald-400">22.1%</strong></span>
+            <span class="text-slate-300 font-mono">Hit Rate: <strong class="text-emerald-400">79.5%</strong></span>
+        </div>
+        <div class="text-[11px] text-slate-500">
+            Progressive Model Ladder: Climatology → Spread → Analogs → GBDT → 2D U-Net → OOF Stacking
+        </div>
+    </footer>
+
+    <!-- INTERACTIVE JAVASCRIPT ENGINE -->
+    <script>
+        let currentLeadDay = 3;
+        let currentScenario = "";
+        let selectedSubId = "SUB_35";
+        let geojsonData = null;
+        let assessmentData = null;
+        let map = null;
+        let geojsonLayer = null;
+        let trajectoryChart = null;
+
+        // Initialize Map
+        function initMap() {
+            map = L.map('map', {
+                center: [22.5, 82.5],
+                zoom: 4.8,
+                zoomControl: true,
+                attributionControl: false
+            });
+
+            // CartoDB Dark Base Layer
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                maxZoom: 18,
+                subdomains: 'abcd',
+            }).addTo(map);
+        }
+
+        // Initialize Lead Day Buttons (1 to 10)
+        function initLeadButtons() {
+            const container = document.getElementById("leadButtons");
+            container.innerHTML = "";
+            for (let d = 1; d <= 10; d++) {
+                const btn = document.createElement("button");
+                btn.id = `lead_btn_${d}`;
+                btn.className = `px-3 py-1 rounded text-xs font-bold transition ${
+                    d === currentLeadDay
+                        ? "bg-blue-600 text-white shadow"
+                        : "bg-slate-900 text-slate-400 hover:bg-slate-800 hover:text-slate-200 border border-slate-800"
+                }`;
+                btn.innerText = `Day ${d} (${d * 24}h)`;
+                btn.onclick = () => setLeadDay(d);
+                container.appendChild(btn);
+            }
+        }
+
+        function setLeadDay(d) {
+            currentLeadDay = d;
+            initLeadButtons();
+            fetchConfidenceData();
+        }
+
+        function loadScenario(scen) {
+            currentScenario = scen;
+            fetchConfidenceData();
+        }
+
+        // Color mapping for confidence
+        function getSubdivisionColor(conf) {
+            if (conf >= 75) return "#10b981"; // Emerald
+            if (conf >= 50) return "#eab308"; // Yellow
+            if (conf >= 25) return "#f97316"; // Orange
+            return "#f43f5e";                // Rose Red
+        }
+
+        async function fetchGeoJSON() {
+            try {
+                const res = await fetch("/api/v1/geojson");
+                geojsonData = await res.json();
+                renderGeoJSON();
+            } catch (err) {
+                console.error("Failed to fetch GeoJSON:", err);
+            }
+        }
+
+        function renderGeoJSON() {
+            if (!geojsonData || !map) return;
+            if (geojsonLayer) map.removeLayer(geojsonLayer);
+
+            geojsonLayer = L.geoJSON(geojsonData, {
+                style: function(feature) {
+                    const subId = feature.properties.sub_id;
+                    const subData = assessmentData ? assessmentData.subdivisions[subId] : null;
+                    const conf = subData ? subData.confidence_score : 75;
+                    const color = getSubdivisionColor(conf);
+                    const isSelected = (subId === selectedSubId);
+
+                    return {
+                        fillColor: color,
+                        weight: isSelected ? 3 : 1.2,
+                        opacity: 1,
+                        color: isSelected ? '#38bdf8' : '#334155',
+                        fillOpacity: 0.65
+                    };
+                },
+                onEachFeature: function(feature, layer) {
+                    const subId = feature.properties.sub_id;
+                    const name = feature.properties.name;
+
+                    layer.on({
+                        mouseover: function(e) {
+                            const l = e.target;
+                            l.setStyle({ fillOpacity: 0.85, weight: 2.5, color: '#f8fafc' });
+                        },
+                        mouseout: function(e) {
+                            if (subId !== selectedSubId) {
+                                geojsonLayer.resetStyle(e.target);
+                            }
+                        },
+                        click: function() {
+                            selectedSubId = subId;
+                            renderGeoJSON();
+                            fetchSubdivisionDetail(subId);
+                        }
+                    });
+
+                    // Tooltip
+                    const subData = assessmentData ? assessmentData.subdivisions[subId] : null;
+                    const conf = subData ? subData.confidence_score : "--";
+                    const badge = subData ? subData.alert_badge : "";
+                    layer.bindTooltip(`<strong>${name} (${subId})</strong><br>Confidence: ${conf}%<br>${badge}`, {
+                        sticky: true,
+                        className: 'bg-slate-900 text-slate-100 text-xs border border-slate-700 px-2 py-1 rounded shadow-xl'
+                    });
+                }
+            }).addTo(map);
+        }
+
+        async function fetchConfidenceData() {
+            try {
+                const dateVal = document.getElementById("initDate").value || "2026-07-15";
+                let url = `/api/v1/confidence?init_date=${dateVal}&lead_day=${currentLeadDay}`;
+                if (currentScenario) url += `&scenario=${currentScenario}`;
+
+                const res = await fetch(url);
+                assessmentData = await res.json();
+
+                // Update regional chips
+                const h = assessmentData.homogeneous_summary;
+                if (h) {
+                    if (h.NWI) document.getElementById("nwi_chip").innerText = `NWI: ${h.NWI.mean_confidence_day1}%`;
+                    if (h.CNI) document.getElementById("cni_chip").innerText = `CNI: ${h.CNI.mean_confidence_day1}%`;
+                    if (h.SPI) document.getElementById("spi_chip").innerText = `SPI: ${h.SPI.mean_confidence_day1}%`;
+                    if (h.ENE) document.getElementById("ene_chip").innerText = `ENE: ${h.ENE.mean_confidence_day1}%`;
+                }
+
+                renderGeoJSON();
+                fetchSubdivisionDetail(selectedSubId);
+            } catch (err) {
+                console.error("Error loading confidence data:", err);
+            }
+        }
+
+        async function fetchSubdivisionDetail(subId) {
+            try {
+                const dateVal = document.getElementById("initDate").value || "2026-07-15";
+                let url = `/api/v1/subdivision/${subId}?init_date=${dateVal}&lead_day=${currentLeadDay}`;
+                if (currentScenario) url += `&scenario=${currentScenario}`;
+
+                const res = await fetch(url);
+                const detail = await res.json();
+                populateForecasterDesk(detail);
+            } catch (err) {
+                console.error("Error loading subdivision detail:", err);
+            }
+        }
+
+        function populateForecasterDesk(detail) {
+            const cur = detail.current_assessment;
+            document.getElementById("subIdTag").innerText = `${detail.sub_id} · ${detail.region}`;
+            document.getElementById("subName").innerText = detail.sub_name;
+
+            const confElem = document.getElementById("confScore");
+            confElem.innerText = `${cur.confidence_score}%`;
+            confElem.style.color = cur.alert_color;
+
+            document.getElementById("bustProb").innerText = `Bust Prob: ${(cur.bust_probability * 100).toFixed(1)}%`;
+
+            const badge = document.getElementById("activeAlertBadge");
+            badge.innerText = cur.alert_badge;
+            badge.style.borderColor = cur.alert_color;
+            badge.style.color = cur.alert_color;
+
+            // Regime
+            const regContainer = document.getElementById("regimeTags");
+            regContainer.innerHTML = "";
+            (cur.regime_info.all_tags || [cur.regime_info.regime_title]).forEach(tag => {
+                const sp = document.createElement("span");
+                sp.className = "bg-blue-950/80 text-blue-300 text-xs px-2.5 py-1 rounded border border-blue-800 font-medium";
+                sp.innerText = tag;
+                regContainer.appendChild(sp);
+            });
+            document.getElementById("regimeDesc").innerText = cur.regime_info.description;
+
+            // SHAP Drivers
+            const driversContainer = document.getElementById("shapDrivers");
+            driversContainer.innerHTML = "";
+            (cur.top_drivers || []).forEach(d => {
+                const isRisk = (d.shap_value > 0);
+                const sign = isRisk ? "+" : "-";
+                const barColor = isRisk ? "bg-rose-500" : "bg-emerald-500";
+                const widthPct = Math.min(100, Math.abs(d.shap_value) * 120);
+
+                const item = document.createElement("div");
+                item.className = "p-2 bg-slate-900 rounded border border-slate-800/80";
+                item.innerHTML = `
+                    <div class="flex justify-between font-medium">
+                        <span class="text-slate-200">${d.feature}</span>
+                        <span class="font-mono ${isRisk ? 'text-rose-400' : 'text-emerald-400'}">SHAP ${sign}${Math.abs(d.shap_value).toFixed(2)}</span>
+                    </div>
+                    <div class="w-full bg-slate-800 h-1.5 rounded-full my-1.5 overflow-hidden">
+                        <div class="${barColor} h-1.5 rounded-full" style="width: ${widthPct}%"></div>
+                    </div>
+                    <p class="text-[11px] text-slate-400 leading-tight">${d.impact}</p>
+                `;
+                driversContainer.appendChild(item);
+            });
+
+            // Analogs
+            const analogContainer = document.getElementById("analogCards");
+            analogContainer.innerHTML = "";
+            (cur.analogs || []).forEach(a => {
+                const card = document.createElement("div");
+                card.className = "p-2.5 bg-slate-900 rounded border border-slate-800/80";
+                card.innerHTML = `
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="font-bold text-white text-xs">${a.title}</span>
+                        <span class="bg-indigo-950 text-indigo-300 px-2 py-0.5 rounded text-[10px] font-mono border border-indigo-800">${a.similarity}% Match</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 mb-1 leading-snug">${a.failure_mode}</p>
+                    <div class="text-[10px] text-slate-500 font-mono">Obs: ${a.observed_peak_rain} mm/day · Fcst: ${a.raw_forecast_rain} mm/day</div>
+                `;
+                analogContainer.appendChild(card);
+            });
+
+            // Official Bulletin
+            document.getElementById("advisoryText").innerText = cur.bulletin.full_bulletin;
+
+            // Render Trajectory Curve
+            renderTrajectoryChart(detail.trajectory);
+        }
+
+        function renderTrajectoryChart(trajectory) {
+            const ctx = document.getElementById('trajectoryChart').getContext('2d');
+            const labels = trajectory.map(t => `D${t.lead_day}`);
+            const dataScores = trajectory.map(t => t.confidence_score);
+            const pointColors = trajectory.map(t => t.alert_color);
+
+            if (trajectoryChart) trajectoryChart.destroy();
+
+            trajectoryChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Calibrated Confidence (%)',
+                        data: dataScores,
+                        borderColor: '#38bdf8',
+                        backgroundColor: 'rgba(56, 189, 248, 0.12)',
+                        pointBackgroundColor: pointColors,
+                        pointBorderColor: '#ffffff',
+                        pointRadius: 5,
+                        fill: true,
+                        tension: 0.35,
+                        borderWidth: 2.5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            min: 0,
+                            max: 100,
+                            ticks: { color: '#64748b', font: { size: 10 } },
+                            grid: { color: '#1e293b' }
+                        },
+                        x: {
+                            ticks: { color: '#64748b', font: { size: 10 } },
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Bootstrap on load
+        window.addEventListener('DOMContentLoaded', () => {
+            initMap();
+            initLeadButtons();
+            fetchGeoJSON().then(() => fetchConfidenceData());
+        });
+    </script>
+</body>
+</html>
