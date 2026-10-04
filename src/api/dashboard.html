@@ -278,8 +278,8 @@
         let stationLayerGroup = null;
         let trajectoryChart = null;
 
-        // Geoapify Configuration
-        const GEOAPIFY_KEY = "b47c0ea9171f456187680bb01c29e64a";
+        // Geoapify Configuration (loaded dynamically from server config/gis)
+        let GEOAPIFY_KEY = "";
         let currentTileStyle = "dark-matter-dark-grey";
 
         function initMap() {
@@ -290,9 +290,24 @@
                 attributionControl: false
             });
 
-            applyTileLayer(currentTileStyle);
-
             stationLayerGroup = L.layerGroup().addTo(map);
+
+            // Fetch GIS configuration dynamically from backend (.env)
+            fetch('/api/v1/config/gis')
+                .then(r => r.json())
+                .then(cfg => {
+                    if (cfg.api_key) {
+                        GEOAPIFY_KEY = cfg.api_key;
+                    }
+                    if (cfg.default_style) {
+                        currentTileStyle = cfg.default_style;
+                    }
+                    applyTileLayer(currentTileStyle);
+                })
+                .catch(err => {
+                    console.warn("GIS config fetch error, using CartoDB dark fallback:", err);
+                    applyTileLayer("cartodb-dark");
+                });
 
             // Click listener for interactive reverse geocoding
             map.on('click', function(e) {
@@ -306,7 +321,7 @@
             if (baseTileLayer) map.removeLayer(baseTileLayer);
 
             let tileUrl = "";
-            if (styleKey === "cartodb-dark") {
+            if (styleKey === "cartodb-dark" || !GEOAPIFY_KEY) {
                 tileUrl = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
             } else {
                 tileUrl = `https://maps.geoapify.com/v1/tile/${styleKey}/{z}/{x}/{y}.png?apiKey=${GEOAPIFY_KEY}`;

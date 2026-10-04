@@ -39,7 +39,13 @@ venv.bak/
 *.swp
 *.swo
 
-# Large scientific data files / raw downloads (retain sample data and demo cache)
+# Environment & Secret files
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Large scientific data files / raw downloads
 *.nc
 *.grib2
 *.grb2
@@ -49,7 +55,7 @@ venv.bak/
 *.hdf5
 data/raw/
 data/reforecast_cache/
-!data/demo_cache.json
+data/demo_cache.json
 
 # Model weights (if huge)
 *.pt
@@ -58,3 +64,4 @@ data/reforecast_cache/
 
 # Logs
 *.log
+

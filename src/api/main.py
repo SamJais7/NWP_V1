@@ -41,23 +41,12 @@ _ASSESSMENT_CACHE: Dict[str, Any] = {}
 
 
 def get_cached_assessment(init_date: str = "2026-07-15", cycle: str = "00Z", scenario: Optional[str] = None) -> Dict[str, Any]:
+    """
+    Computes and caches dynamic operational forecast assessments.
+    Runs strictly via the live orchestrator pipeline without demo cache files.
+    """
     key = f"{init_date}_{cycle}_{scenario or 'ops'}"
     if key not in _ASSESSMENT_CACHE:
-        # Check if pre-computed demo cache is available on disk
-        demo_cache_file = Path(__file__).resolve().parent.parent.parent / "data" / "demo_cache.json"
-        if not scenario and demo_cache_file.exists():
-            try:
-                with open(demo_cache_file, "r", encoding="utf-8") as f:
-                    _ASSESSMENT_CACHE[key] = json.load(f)
-                    # Convert string keys back to int for lead days
-                    if "leads" in _ASSESSMENT_CACHE[key]:
-                        _ASSESSMENT_CACHE[key]["leads"] = {
-                            int(k): v for k, v in _ASSESSMENT_CACHE[key]["leads"].items()
-                        }
-                    return _ASSESSMENT_CACHE[key]
-            except Exception:
-                pass
-
         _ASSESSMENT_CACHE[key] = orchestrator.run_cycle_assessment(
             init_date=init_date,
             cycle=cycle,

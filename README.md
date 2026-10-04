@@ -158,6 +158,7 @@ flowchart TB
 ```
 c:\Users\samar\NWP\
 ├── .gitignore                      # Git ignore patterns for clean tracking
+├── .env.example                    # Template environment variables (safe for Git)
 ├── push_to_github.ps1              # Turnkey automated continuous GitHub push script
 ├── rollback.ps1                    # Turnkey instant rollback script
 ├── requirements.txt                # Pinned dependencies
@@ -169,7 +170,9 @@ c:\Users\samar\NWP\
 ├── Design.md                       # UI/UX & Interactive Dashboard Specification
 ├── README.md                       # Master Documentation
 ├── data/
-│   └── demo_cache.json             # Frozen offline demo cache for instant presentation
+│   ├── geojson/                    # Level 2 district GeoJSON boundaries
+│   ├── registry/                   # IMD AWS station registry (Parquet, SQLite, CSV)
+│   └── processed/                  # Real-world engineered features (112 columns)
 ├── src/
 │   ├── __init__.py
 │   ├── config.py                   # 36 IMD Subdivisions, 4 Homogeneous Regions, Thresholds
@@ -244,7 +247,17 @@ The operational backend provides 15 endpoints organized into 5 operational tiers
 python -m pip install -r requirements.txt
 ```
 
-### 2. Run All Automated Test Suites
+### 2. Configure Environment Variables
+Copy `.env.example` to `.env` and set your API keys (the `.env` file is excluded from Git tracking):
+```powershell
+Copy-Item .env.example .env
+```
+Key variables:
+- `GEOAPIFY_API_KEY`: Your Geoapify API key for maps and geocoding.
+- `IMD_API_KEY`: Optional IMD authentication token (if required).
+- `GEOAPIFY_TILE_STYLE`: Map theme (`dark-matter-dark-grey`, `dark-matter-purple-roads`, `osm-bright-smooth`).
+
+### 3. Run All Automated Test Suites
 Execute the scientific and API test suites (both verified 100% pass):
 ```powershell
 # 1. Scientific atmospheric dynamics and ML test suite (6/6 tests passing)
@@ -254,7 +267,7 @@ python tests/run_tests.py
 python tests/test_api_endpoints.py
 ```
 
-### 3. Launch the Operational Backend & Production GIS Dashboard
+### 4. Launch the Operational Backend & Production GIS Dashboard
 Start the high-performance FastAPI server with Uvicorn:
 ```powershell
 python -m uvicorn src.api.main:app --host 0.0.0.0 --port 8000 --reload
