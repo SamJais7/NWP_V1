@@ -44,64 +44,7 @@ Pratyay implements a strict 6-rung ablation model ladder where each higher-compl
 
 ---
 
-## 3. GitHub Continuous Synchronization & Instant Rollback
-
-This repository includes turnkey PowerShell scripts and Git commands so you can continuously push your progress to GitHub and instantly roll back to any previous working state if anything breaks.
-
-### A. Setting Up Your Remote GitHub Repository (One-Time Setup)
-Create an empty repository on [GitHub](https://github.com/new) (e.g., `pratyay-nwp`), then run in your terminal:
-```powershell
-# Set your remote repository URL
-git remote add origin https://github.com/<YOUR_GITHUB_USERNAME>/<YOUR_REPO_NAME>.git
-git branch -M main
-git push -u origin main
-```
-
-### B. Command to Continuously Push to GitHub
-You can use the included automated script `push_to_github.ps1`:
-
-1. **Continuous Auto-Push Watcher** (monitors every 60 seconds and auto-pushes any changes):
-   ```powershell
-   .\push_to_github.ps1 -Watch
-   ```
-2. **On-Demand Single Push**:
-   ```powershell
-   .\push_to_github.ps1 -Message "Implemented feature X"
-   ```
-3. **Manual Direct Git Command**:
-   ```powershell
-   git add . ; git commit -m "checkpoint update" ; git push origin main
-   ```
-
-### C. Commands to Instantly Roll Back If Anything Breaks
-You can use the included rollback script `rollback.ps1` or standard Git commands:
-
-1. **View Recent Commits**:
-   ```powershell
-   .\rollback.ps1 -List
-   # or
-   git log --oneline -n 10
-   ```
-2. **Instant Soft Rollback (Safe - keeps your edits unstaged so you don't lose work)**:
-   ```powershell
-   .\rollback.ps1 -Target "HEAD~1"
-   # or
-   git reset --soft HEAD~1
-   ```
-3. **Instant Hard Rollback (Discards breaking changes and restores previous working commit)**:
-   ```powershell
-   .\rollback.ps1 -Target "HEAD~1" -Hard
-   # or
-   git reset --hard HEAD~1
-   ```
-4. **Rollback to a Specific Working Commit Hash**:
-   ```powershell
-   git reset --hard <COMMIT_HASH>
-   ```
-
----
-
-## 4. System Architecture
+## 3. System Architecture
 
 ```mermaid
 flowchart TB
@@ -153,7 +96,7 @@ flowchart TB
 
 ---
 
-## 5. Project Directory Structure
+## 4. Project Directory Structure
 
 ```
 c:\Users\samar\NWP\
@@ -216,7 +159,7 @@ c:\Users\samar\NWP\
 
 ---
 
-## 6. REST API Endpoints Overview
+## 5. REST API Endpoints Overview
 
 The operational backend provides 15 endpoints organized into 5 operational tiers:
 
@@ -240,7 +183,7 @@ The operational backend provides 15 endpoints organized into 5 operational tiers
 
 ---
 
-## 7. Quickstart Guide
+## 6. Quickstart Guide
 
 ### 1. Install Dependencies
 ```powershell
