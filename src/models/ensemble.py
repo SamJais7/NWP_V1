@@ -101,9 +101,10 @@ class MetaEnsembleStacker:
 
         # Isotonic Calibration
         if self.is_calibrated:
-            calibrated_bust_prob = self.calibrator.predict(stacked_raw)
+            cal_pred = self.calibrator.predict(stacked_raw)
+            calibrated_bust_prob = np.clip(0.4 * stacked_raw + 0.6 * cal_pred, 0.02, 0.98)
         else:
-            # Well-calibrated sigmoid transformation
+            # Well-calibrated transformation
             calibrated_bust_prob = np.clip(stacked_raw, 0.03, 0.97)
 
         # Dual Output 1: Calibrated Confidence Index (0–100%)

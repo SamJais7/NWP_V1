@@ -30,8 +30,13 @@ class TabularBustClassifier:
 
     def fit(self, df: pd.DataFrame, target_col: str = "bust_label") -> "TabularBustClassifier":
         """Fits the GBDT model on tabular feature matrix."""
-        ignore_cols = ["sub_id", "sub_name", "bust_label", "season_year", "init_date"]
-        self.feature_cols = [c for c in df.columns if c not in ignore_cols]
+        excluded_targets = [
+            "bust_label", "categorical_bust", "p90_bust", "obs_rain_mm",
+            "abs_rain_error", "obs_t2m_c", "sub_id", "sub_name", "region",
+            "station_id", "cycle_date", "init_date", "season_year"
+        ]
+        numeric_cols = df.select_dtypes(include=[np.number]).columns.tolist()
+        self.feature_cols = [c for c in numeric_cols if c not in excluded_targets]
         
         X = df[self.feature_cols].values
         y = df[target_col].values
@@ -52,8 +57,13 @@ class TabularBustClassifier:
 
     def _fit_default_prior(self, df: pd.DataFrame):
         """Fits a well-calibrated baseline prior on feature structure."""
-        ignore_cols = ["sub_id", "sub_name", "bust_label", "season_year", "init_date"]
-        self.feature_cols = [c for c in df.columns if c not in ignore_cols]
+        excluded_targets = [
+            "bust_label", "categorical_bust", "p90_bust", "obs_rain_mm",
+            "abs_rain_error", "obs_t2m_c", "sub_id", "sub_name", "region",
+            "station_id", "cycle_date", "init_date", "season_year"
+        ]
+        numeric_cols = df.select_dtypes(include=[np.number]).columns.tolist()
+        self.feature_cols = [c for c in numeric_cols if c not in excluded_targets]
         
         rng = np.random.RandomState(self.random_state)
         n = len(df)

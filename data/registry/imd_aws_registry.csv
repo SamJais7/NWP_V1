@@ -1,0 +1,73 @@
+station_id,station_name,district,state,subdivision_id,latitude,longitude,elevation_m,distance_to_coast_km,active_status
+AWS_ANI_01,Andaman & Nicobar Islands Primary Observatory,ANI HQ,Andaman,SUB_01,11.5,92.7,52.5,1176.0,True
+AWS_ANI_02,Andaman & Nicobar Islands Regional AWS,ANI Rural,Andaman,SUB_01,11.95,92.35,108.0,1246.4,True
+AWS_ARU_01,Arunachal Pradesh Primary Observatory,ARU HQ,Arunachal Pradesh,SUB_02,28.2,94.7,303.0,1336.0,True
+AWS_ARU_02,Arunachal Pradesh Regional AWS,ARU Rural,Arunachal Pradesh,SUB_02,28.65,94.35,308.4,1410.4,True
+AWS_ASM_01,Assam & Meghalaya Primary Observatory,ASM HQ,Assam,SUB_03,26.2,92.5,273.0,1160.0,True
+AWS_ASM_02,Assam & Meghalaya Regional AWS,ASM Rural,Assam,SUB_03,26.65,92.15,284.4,1230.0,True
+AWS_NMMT_01,"Nagaland, Manipur, Mizoram & Tripura Primary Observatory",NMMT HQ,"Nagaland, Manipur, Mizoram",SUB_04,24.5,93.5,247.5,1240.0,True
+AWS_NMMT_02,"Nagaland, Manipur, Mizoram & Tripura Regional AWS",NMMT Rural,"Nagaland, Manipur, Mizoram",SUB_04,24.95,93.15,264.0,1312.0,True
+AWS_SHWB_01,Sub-Himalayan West Bengal & Sikkim Primary Observatory,SHWB HQ,Sub-Himalayan West Bengal,SUB_05,26.8,88.4,282.0,832.0,True
+AWS_SHWB_02,Sub-Himalayan West Bengal & Sikkim Regional AWS,SHWB Rural,Sub-Himalayan West Bengal,SUB_05,27.25,88.05,291.6,893.8,True
+AWS_GWB_01,Gangetic West Bengal Primary Observatory,GWB HQ,Gangetic West Bengal,SUB_06,23.2,87.8,228.0,784.0,True
+AWS_GWB_02,Gangetic West Bengal Regional AWS,GWB Rural,Gangetic West Bengal,SUB_06,23.65,87.45,248.4,844.6,True
+AWS_ODI_01,Odisha Primary Observatory,ODI HQ,Odisha,SUB_07,20.5,84.4,187.5,512.0,True
+AWS_ODI_02,Odisha Regional AWS,ODI Rural,Odisha,SUB_07,20.95,84.05,216.0,565.8,True
+AWS_JHK_01,Jharkhand Primary Observatory,JHK HQ,Jharkhand,SUB_08,23.6,85.3,234.0,584.0,True
+AWS_JHK_02,Jharkhand Regional AWS,JHK Rural,Jharkhand,SUB_08,24.05,84.95,253.2,639.6,True
+AWS_BIH_01,Bihar Primary Observatory,BIH HQ,Bihar,SUB_09,25.6,85.8,264.0,624.0,True
+AWS_BIH_02,Bihar Regional AWS,BIH Rural,Bihar,SUB_09,26.05,85.45,277.2,680.6,True
+AWS_EUP_01,East Uttar Pradesh Primary Observatory,EUP HQ,East Uttar Pradesh,SUB_10,26.8,82.2,282.0,336.0,True
+AWS_EUP_02,East Uttar Pradesh Regional AWS,EUP Rural,East Uttar Pradesh,SUB_10,27.25,81.85,291.6,385.4,True
+AWS_WUP_01,West Uttar Pradesh Primary Observatory,WUP HQ,West Uttar Pradesh,SUB_11,28.0,78.5,300.0,40.0,True
+AWS_WUP_02,West Uttar Pradesh Regional AWS,WUP Rural,West Uttar Pradesh,SUB_11,28.45,78.15,306.0,82.0,True
+AWS_UTK_01,Uttarakhand Primary Observatory,UTK HQ,Uttarakhand,SUB_12,30.1,79.2,331.5,96.0,True
+AWS_UTK_02,Uttarakhand Regional AWS,UTK Rural,Uttarakhand,SUB_12,30.55,78.85,331.2,139.4,True
+AWS_HCD_01,"Haryana, Chandigarh & Delhi Primary Observatory",HCD HQ,"Haryana, Chandigarh",SUB_13,29.1,76.8,316.5,96.0,True
+AWS_HCD_02,"Haryana, Chandigarh & Delhi Regional AWS",HCD Rural,"Haryana, Chandigarh",SUB_13,29.55,76.45,319.2,57.4,True
+AWS_PUN_01,Punjab Primary Observatory,PUN HQ,Punjab,SUB_14,31.0,75.4,345.0,208.0,True
+AWS_PUN_02,Punjab Regional AWS,PUN Rural,Punjab,SUB_14,31.45,75.05,342.0,172.2,True
+AWS_HP_01,Himachal Pradesh Primary Observatory,HP HQ,Himachal Pradesh,SUB_15,31.8,77.2,357.0,64.0,True
+AWS_HP_02,Himachal Pradesh Regional AWS,HP Rural,Himachal Pradesh,SUB_15,32.25,76.85,351.6,24.6,True
+AWS_JKL_01,Jammu & Kashmir and Ladakh Primary Observatory,JKL HQ,Jammu,SUB_16,34.0,76.0,390.0,160.0,True
+AWS_JKL_02,Jammu & Kashmir and Ladakh Regional AWS,JKL Rural,Jammu,SUB_16,34.45,75.65,378.0,123.0,True
+AWS_WRA_01,West Rajasthan Primary Observatory,WRA HQ,West Rajasthan,SUB_17,26.8,72.0,282.0,480.0,True
+AWS_WRA_02,West Rajasthan Regional AWS,WRA Rural,West Rajasthan,SUB_17,27.25,71.65,291.6,451.0,True
+AWS_ERA_01,East Rajasthan Primary Observatory,ERA HQ,East Rajasthan,SUB_18,25.8,75.8,267.0,176.0,True
+AWS_ERA_02,East Rajasthan Regional AWS,ERA Rural,East Rajasthan,SUB_18,26.25,75.45,279.6,139.4,True
+AWS_WMP_01,West Madhya Pradesh Primary Observatory,WMP HQ,West Madhya Pradesh,SUB_19,23.2,76.5,228.0,120.0,True
+AWS_WMP_02,West Madhya Pradesh Regional AWS,WMP Rural,West Madhya Pradesh,SUB_19,23.65,76.15,248.4,82.0,True
+AWS_EMP_01,East Madhya Pradesh Primary Observatory,EMP HQ,East Madhya Pradesh,SUB_20,23.5,80.8,232.5,224.0,True
+AWS_EMP_02,East Madhya Pradesh Regional AWS,EMP Rural,East Madhya Pradesh,SUB_20,23.95,80.45,252.0,270.6,True
+AWS_GUJ_01,Gujarat Region Primary Observatory,GUJ HQ,Gujarat Region,SUB_21,22.5,72.8,217.5,416.0,True
+AWS_GUJ_02,Gujarat Region Regional AWS,GUJ Rural,Gujarat Region,SUB_21,22.95,72.45,240.0,385.4,True
+AWS_SAU_01,Saurashtra & Kutch Primary Observatory,SAU HQ,Saurashtra,SUB_22,22.3,70.4,214.5,608.0,True
+AWS_SAU_02,Saurashtra & Kutch Regional AWS,SAU Rural,Saurashtra,SUB_22,22.75,70.05,237.6,582.2,True
+AWS_KNG_01,Konkan & Goa Primary Observatory,KNG HQ,Konkan,SUB_23,17.5,73.5,142.5,360.0,True
+AWS_KNG_02,Konkan & Goa Regional AWS,KNG Rural,Konkan,SUB_23,17.95,73.15,180.0,328.0,True
+AWS_MMH_01,Madhya Maharashtra Primary Observatory,MMH HQ,Madhya Maharashtra,SUB_24,18.2,74.8,153.0,256.0,True
+AWS_MMH_02,Madhya Maharashtra Regional AWS,MMH Rural,Madhya Maharashtra,SUB_24,18.65,74.45,188.4,221.4,True
+AWS_MAR_01,Marathwada Primary Observatory,MAR HQ,Marathwada,SUB_25,19.1,76.4,166.5,128.0,True
+AWS_MAR_02,Marathwada Regional AWS,MAR Rural,Marathwada,SUB_25,19.55,76.05,199.2,90.2,True
+AWS_VID_01,Vidarbha Primary Observatory,VID HQ,Vidarbha,SUB_26,21.0,79.3,195.0,104.0,True
+AWS_VID_02,Vidarbha Regional AWS,VID Rural,Vidarbha,SUB_26,21.45,78.95,222.0,147.6,True
+AWS_CHH_01,Chhattisgarh Primary Observatory,CHH HQ,Chhattisgarh,SUB_27,21.3,81.8,199.5,304.0,True
+AWS_CHH_02,Chhattisgarh Regional AWS,CHH Rural,Chhattisgarh,SUB_27,21.75,81.45,225.6,352.6,True
+AWS_CAP_01,Coastal Andhra Pradesh & Yanam Primary Observatory,CAP HQ,Coastal Andhra Pradesh,SUB_28,16.5,81.5,127.5,280.0,True
+AWS_CAP_02,Coastal Andhra Pradesh & Yanam Regional AWS,CAP Rural,Coastal Andhra Pradesh,SUB_28,16.95,81.15,168.0,328.0,True
+AWS_TEL_01,Telangana Primary Observatory,TEL HQ,Telangana,SUB_29,17.9,79.1,148.5,88.0,True
+AWS_TEL_02,Telangana Regional AWS,TEL Rural,Telangana,SUB_29,18.35,78.75,184.8,131.2,True
+AWS_RAY_01,Rayalaseema Primary Observatory,RAY HQ,Rayalaseema,SUB_30,14.5,78.5,97.5,40.0,True
+AWS_RAY_02,Rayalaseema Regional AWS,RAY Rural,Rayalaseema,SUB_30,14.95,78.15,144.0,82.0,True
+AWS_TNP_01,"Tamil Nadu, Puducherry & Karaikal Primary Observatory",TNP HQ,"Tamil Nadu, Puducherry",SUB_31,11.1,78.6,46.5,48.0,True
+AWS_TNP_02,"Tamil Nadu, Puducherry & Karaikal Regional AWS",TNP Rural,"Tamil Nadu, Puducherry",SUB_31,11.55,78.25,103.2,90.2,True
+AWS_CKA_01,Coastal Karnataka Primary Observatory,CKA HQ,Coastal Karnataka,SUB_32,14.0,74.5,90.0,280.0,True
+AWS_CKA_02,Coastal Karnataka Regional AWS,CKA Rural,Coastal Karnataka,SUB_32,14.45,74.15,138.0,246.0,True
+AWS_NIK_01,North Interior Karnataka Primary Observatory,NIK HQ,North Interior Karnataka,SUB_33,16.0,75.8,120.0,176.0,True
+AWS_NIK_02,North Interior Karnataka Regional AWS,NIK Rural,North Interior Karnataka,SUB_33,16.45,75.45,162.0,139.4,True
+AWS_SIK_01,South Interior Karnataka Primary Observatory,SIK HQ,South Interior Karnataka,SUB_34,13.0,76.5,75.0,120.0,True
+AWS_SIK_02,South Interior Karnataka Regional AWS,SIK Rural,South Interior Karnataka,SUB_34,13.45,76.15,126.0,82.0,True
+AWS_KER_01,Kerala & Mahe Primary Observatory,KER HQ,Kerala,SUB_35,10.2,76.4,33.0,128.0,True
+AWS_KER_02,Kerala & Mahe Regional AWS,KER Rural,Kerala,SUB_35,10.65,76.05,92.4,90.2,True
+AWS_LAK_01,Lakshadweep Primary Observatory,LAK HQ,Lakshadweep,SUB_36,10.5,72.6,37.5,432.0,True
+AWS_LAK_02,Lakshadweep Regional AWS,LAK Rural,Lakshadweep,SUB_36,10.95,72.25,96.0,401.8,True

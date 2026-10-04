@@ -122,6 +122,85 @@ def test_08_benchmark_scenario():
     print("Test 08 (Benchmark Scenario Kerala 2018): PASS")
 
 
+def test_09_gis_config():
+    """Verify Geoapify GIS tile configuration and styles."""
+    response = client.get("/api/v1/config/gis")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["provider"] == "Geoapify"
+    assert "tile_url_template" in data
+    assert len(data["available_styles"]) >= 3
+    print("Test 09 (Geoapify GIS Config): PASS")
+
+
+def test_10_live_stations():
+    """Verify Automatic Weather Station (AWS) live telemetry stream."""
+    response = client.get("/api/v1/stations")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["total_stations"] > 0
+    st = data["stations"][0]
+    assert "live_telemetry" in st
+    assert "temp_c" in st["live_telemetry"]
+    print("Test 10 (Live AWS Stations Telemetry): PASS")
+
+
+def test_11_districts_geojson():
+    """Verify Level 2 District boundaries GeoJSON with synchronized IMD warnings."""
+    response = client.get("/api/v1/districts")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["type"] == "FeatureCollection"
+    assert len(data["features"]) > 0
+    p = data["features"][0]["properties"]
+    assert "warning_color" in p
+    assert "warning_hex" in p
+    print("Test 11 (District Boundaries & Warnings): PASS")
+
+
+def test_12_geocoding_search():
+    """Verify Geoapify Geocoding address search."""
+    response = client.get("/api/v1/geocode/search?q=Pune")
+    assert response.status_code == 200
+    data = response.json()
+    assert "latitude" in data
+    assert "longitude" in data
+    print("Test 12 (Geoapify Geocoding Search): PASS")
+
+
+def test_13_reverse_geocoding():
+    """Verify map click reverse geocoding to District, State, and AWS station."""
+    response = client.get("/api/v1/geocode/reverse?lat=18.5204&lon=73.8567")
+    assert response.status_code == 200
+    data = response.json()
+    assert "district" in data
+    assert "subdivision_id" in data
+    assert "nearest_station" in data
+    assert "live_aws_telemetry" in data
+    print("Test 13 (Reverse Geocoding & Nearest AWS): PASS")
+
+
+def test_14_imd_warnings():
+    """Verify official IMD warning feeds for side-by-side benchmark."""
+    response = client.get("/api/v1/imd/warnings")
+    assert response.status_code == 200
+    data = response.json()
+    assert "subdivision_warnings" in data
+    assert "district_warnings" in data
+    print("Test 14 (IMD Official Warning Feeds): PASS")
+
+
+def test_15_real_world_pipeline_status():
+    """Verify pipeline status, feature store size, and benchmark scores."""
+    response = client.get("/api/v1/real_world/status")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["pipeline_state"] == "ACTIVE_SYNCHRONIZED"
+    assert data["features_extracted"] >= 100
+    assert data["roc_auc"] >= 0.82
+    print("Test 15 (Real-World Pipeline Status & Benchmarks): PASS")
+
+
 if __name__ == "__main__":
     test_01_health_check()
     test_02_dashboard_html()
@@ -131,4 +210,11 @@ if __name__ == "__main__":
     test_06_operational_alerts()
     test_07_verification_scorecard()
     test_08_benchmark_scenario()
-    print("\n[PASS] ALL 8 API ENDPOINT TESTS PASSED WITH 100% SUCCESS!")
+    test_09_gis_config()
+    test_10_live_stations()
+    test_11_districts_geojson()
+    test_12_geocoding_search()
+    test_13_reverse_geocoding()
+    test_14_imd_warnings()
+    test_15_real_world_pipeline_status()
+    print("\n[PASS] ALL 15 OPERATIONAL & REAL-WORLD API TESTS PASSED WITH 100% SUCCESS!")

@@ -177,15 +177,21 @@ c:\Users\samar\NWP\
 │   │   ├── __init__.py
 │   │   ├── adapter.py              # ModelAdapter for GEFS, NCUM, and NEPS
 │   │   ├── fetcher.py              # Multi-channel forecast ingestion & simulation fallback
+│   │   ├── imd_client.py           # Real-world IMD API client (21 endpoints: AWS, warnings, synoptic)
+│   │   ├── nwp_client.py           # Open-Meteo multi-model NWP client (ECMWF IFS, GFS, AIFS)
+│   │   ├── station_registry.py     # Geospatial AWS registry with cKDTree nearest-neighbor & Geoapify
+│   │   ├── districts.py            # Level 2 district boundaries synchronized with IMD color alerts
 │   │   ├── regions.py              # Spatial subdivision masks & GeoJSON generator
 │   │   ├── preprocessor.py         # Spherical metric ζ_850, MFC, and Vertical Shear
-│   │   └── feature_engineer.py     # 101 Moments & Lower Model Ladder Baselines (Rungs 1-3)
+│   │   ├── feature_engineer.py     # 101 Moments & Lower Model Ladder Baselines (Rungs 1-3)
+│   │   └── alignment_engine.py     # (F_t, O_t) pairing with 112 engineered physical features
 │   ├── models/
 │   │   ├── __init__.py
 │   │   ├── losses.py               # Focal Loss & Positive-Weighted BCE
 │   │   ├── spatial_model.py        # 2D Spatial U-Net (Padded 160×128)
 │   │   ├── tabular_model.py        # Sub-division LightGBM / GBDT Classifier & Metrics
-│   │   └── ensemble.py             # Out-of-Fold Meta-Ensemble Stacking & Isotonic Calibration
+│   │   ├── ensemble.py             # Out-of-Fold Meta-Ensemble Stacking & Isotonic Calibration
+│   │   └── real_world_trainer.py   # Walk-forward 7-day embargo training & benchmark evaluation
 │   ├── explainability/
 │   │   ├── __init__.py
 │   │   ├── explainer.py            # Context-Aware SHAP Attribution & Synoptic Classifier
@@ -197,17 +203,41 @@ c:\Users\samar\NWP\
 │   └── api/
 │       ├── __init__.py
 │       ├── schemas.py              # Pydantic v2 schemas
-│       ├── main.py                 # FastAPI REST API (8 endpoints)
-│       └── dashboard.html          # Interactive Leaflet GIS Dashboard
+│       ├── main.py                 # FastAPI REST API (15 endpoints)
+│       └── dashboard.html          # Interactive Leaflet + Geoapify GIS Dashboard
 └── tests/
     ├── __init__.py
     ├── run_tests.py                # Scientific & ML unit test runner (Tests 01–06)
-    └── test_api_endpoints.py       # REST API endpoints test suite (Tests 01–08)
+    └── test_api_endpoints.py       # REST API endpoints test suite (15 automated test cases)
 ```
 
 ---
 
-## 6. Quickstart Guide
+## 6. REST API Endpoints Overview
+
+The operational backend provides 15 endpoints organized into 5 operational tiers:
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/health` | System health check and model loading status |
+| `GET` | `/dashboard` | Interactive Leaflet + Geoapify Production GIS Dashboard |
+| `GET` | `/api/v1/forecast/latest` | Latest multi-model forecast grid & metadata |
+| `POST` | `/api/v1/bust/predict` | Predict forecast bust probability for a specific subdivision and lead day |
+| `GET` | `/api/v1/bust/all-india` | All-India 36-subdivision bust probability matrix (Lead Days 1–10) |
+| `GET` | `/api/v1/explain/shap/{sub_id}` | SHAP feature attributions and physical driver ranking |
+| `GET` | `/api/v1/explain/bulletin/{sub_id}` | Standardized 4-section MoES/IMD forecaster advisory bulletin |
+| `GET` | `/api/v1/geojson/subdivisions` | Topologically valid GeoJSON boundaries for all 36 subdivisions |
+| `GET` | `/api/v1/config/gis` | Geoapify GIS configuration, tile URLs, and theme styles |
+| `GET` | `/api/v1/stations` | Live IMD AWS telemetry stations registry with nearest-neighbor search |
+| `GET` | `/api/v1/districts` | Level 2 district GeoJSON boundaries with live IMD color alerts |
+| `GET` | `/api/v1/geocode/search` | Geoapify forward geocoding search for Indian cities, districts, and stations |
+| `GET` | `/api/v1/geocode/reverse` | Geoapify reverse geocoding on map click |
+| `GET` | `/api/v1/imd/warnings` | Real-time IMD district-level severe weather warnings (Green/Yellow/Orange/Red) |
+| `GET` | `/api/v1/real_world/status` | Real-world ingestion pipeline status (IMD API, Open-Meteo, Registry, Dataset) |
+
+---
+
+## 7. Quickstart Guide
 
 ### 1. Install Dependencies
 ```powershell
@@ -217,21 +247,25 @@ python -m pip install -r requirements.txt
 ### 2. Run All Automated Test Suites
 Execute the scientific and API test suites (both verified 100% pass):
 ```powershell
-# 1. Scientific atmospheric dynamics and ML test suite
+# 1. Scientific atmospheric dynamics and ML test suite (6/6 tests passing)
 python tests/run_tests.py
 
-# 2. REST API endpoints and schemas test suite
+# 2. REST API endpoints and schemas test suite (15/15 tests passing)
 python tests/test_api_endpoints.py
 ```
 
-### 3. Launch the Operational Backend & GIS Dashboard
+### 3. Launch the Operational Backend & Production GIS Dashboard
 Start the high-performance FastAPI server with Uvicorn:
 ```powershell
 python -m uvicorn src.api.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
 Once running:
-- **Interactive GIS Dashboard:** Open [http://localhost:8000/dashboard](http://localhost:8000/dashboard) in your browser.
+- **Interactive Production GIS Dashboard:** Open [http://localhost:8000/dashboard](http://localhost:8000/dashboard) in your browser.
+  - Geoapify Vector/Raster map themes (`Dark Grey`, `Purple Roads`, `OSM Bright`)
+  - Live Geocoding Search bar for any Indian location
+  - Click-to-Inspect reverse geocoding & AWS nearest station telemetry
+  - Multi-scale layer toggles (36 Subdivisions, 700+ Districts, Live AWS Stations)
 - **Interactive Swagger API Docs:** Open [http://localhost:8000/docs](http://localhost:8000/docs).
 
 ---

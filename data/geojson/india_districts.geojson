@@ -1,0 +1,1235 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "DIST_KER_01",
+      "properties": {
+        "district_id": "DIST_KER_01",
+        "name": "Ernakulam (Kochi)",
+        "state": "Kerala",
+        "sub_id": "SUB_35",
+        "centroid_lat": 9.9816,
+        "centroid_lon": 76.2999,
+        "warning_color": "GREEN",
+        "rainfall_24h_mm": 0.0
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              75.95,
+              9.632
+            ],
+            [
+              76.65,
+              9.632
+            ],
+            [
+              76.65,
+              10.332
+            ],
+            [
+              75.95,
+              10.332
+            ],
+            [
+              75.95,
+              9.632
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "DIST_KER_02",
+      "properties": {
+        "district_id": "DIST_KER_02",
+        "name": "Wayanad",
+        "state": "Kerala",
+        "sub_id": "SUB_35",
+        "centroid_lat": 11.6854,
+        "centroid_lon": 76.132,
+        "warning_color": "GREEN",
+        "rainfall_24h_mm": 0.0
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              75.782,
+              11.335
+            ],
+            [
+              76.482,
+              11.335
+            ],
+            [
+              76.482,
+              12.035
+            ],
+            [
+              75.782,
+              12.035
+            ],
+            [
+              75.782,
+              11.335
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "DIST_KER_03",
+      "properties": {
+        "district_id": "DIST_KER_03",
+        "name": "Thiruvananthapuram",
+        "state": "Kerala",
+        "sub_id": "SUB_35",
+        "centroid_lat": 8.5241,
+        "centroid_lon": 76.9366,
+        "warning_color": "GREEN",
+        "rainfall_24h_mm": 0.0
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.587,
+              8.174
+            ],
+            [
+              77.287,
+              8.174
+            ],
+            [
+              77.287,
+              8.874
+            ],
+            [
+              76.587,
+              8.874
+            ],
+            [
+              76.587,
+              8.174
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "DIST_MAH_01",
+      "properties": {
+        "district_id": "DIST_MAH_01",
+        "name": "Mumbai City",
+        "state": "Maharashtra",
+        "sub_id": "SUB_23",
+        "centroid_lat": 18.96,
+        "centroid_lon": 72.82,
+        "warning_color": "GREEN",
+        "rainfall_24h_mm": 0.0
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.47,
+              18.61
+            ],
+            [
+              73.17,
+              18.61
+            ],
+            [
+              73.17,
+              19.31
+            ],
+            [
+              72.47,
+              19.31
+            ],
+            [
+              72.47,
+              18.61
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "DIST_MAH_02",
+      "properties": {
+        "district_id": "DIST_MAH_02",
+        "name": "Ratnagiri",
+        "state": "Maharashtra",
+        "sub_id": "SUB_23",
+        "centroid_lat": 16.9902,
+        "centroid_lon": 73.312,
+        "warning_color": "GREEN",
+        "rainfall_24h_mm": 0.0
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.962,
+              16.64
+            ],
+            [
+              73.662,
+              16.64
+            ],
+            [
+              73.662,
+              17.34
+            ],
+            [
+              72.962,
+              17.34
+            ],
+            [
+              72.962,
+              16.64
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "DIST_MAH_03",
+      "properties": {
+        "district_id": "DIST_MAH_03",
+        "name": "Pune",
+        "state": "Maharashtra",
+        "sub_id": "SUB_24",
+        "centroid_lat": 18.5204,
+        "centroid_lon": 73.8567,
+        "warning_color": "GREEN",
+        "rainfall_24h_mm": 0.0
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              73.507,
+              18.17
+            ],
+            [
+              74.207,
+              18.17
+            ],
+            [
+              74.207,
+              18.87
+            ],
+            [
+              73.507,
+              18.87
+            ],
+            [
+              73.507,
+              18.17
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "DIST_MAH_04",
+      "properties": {
+        "district_id": "DIST_MAH_04",
+        "name": "Nagpur",
+        "state": "Maharashtra",
+        "sub_id": "SUB_26",
+        "centroid_lat": 21.1458,
+        "centroid_lon": 79.0882,
+        "warning_color": "GREEN",
+        "rainfall_24h_mm": 0.0
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              78.738,
+              20.796
+            ],
+            [
+              79.438,
+              20.796
+            ],
+            [
+              79.438,
+              21.496
+            ],
+            [
+              78.738,
+              21.496
+            ],
+            [
+              78.738,
+              20.796
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "DIST_DEL_01",
+      "properties": {
+        "district_id": "DIST_DEL_01",
+        "name": "New Delhi",
+        "state": "Delhi",
+        "sub_id": "SUB_13",
+        "centroid_lat": 28.6139,
+        "centroid_lon": 77.209,
+        "warning_color": "GREEN",
+        "rainfall_24h_mm": 0.0
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.859,
+              28.264
+            ],
+            [
+              77.559,
+              28.264
+            ],
+            [
+              77.559,
+              28.964
+            ],
+            [
+              76.859,
+              28.964
+            ],
+            [
+              76.859,
+              28.264
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "DIST_WB_01",
+      "properties": {
+        "district_id": "DIST_WB_01",
+        "name": "Kolkata",
+        "state": "West Bengal",
+        "sub_id": "SUB_06",
+        "centroid_lat": 22.5726,
+        "centroid_lon": 88.3639,
+        "warning_color": "GREEN",
+        "rainfall_24h_mm": 0.0
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              88.014,
+              22.223
+            ],
+            [
+              88.714,
+              22.223
+            ],
+            [
+              88.714,
+              22.923
+            ],
+            [
+              88.014,
+              22.923
+            ],
+            [
+              88.014,
+              22.223
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "DIST_WB_02",
+      "properties": {
+        "district_id": "DIST_WB_02",
+        "name": "South 24 Parganas",
+        "state": "West Bengal",
+        "sub_id": "SUB_06",
+        "centroid_lat": 22.1352,
+        "centroid_lon": 88.4016,
+        "warning_color": "GREEN",
+        "rainfall_24h_mm": 0.0
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              88.052,
+              21.785
+            ],
+            [
+              88.752,
+              21.785
+            ],
+            [
+              88.752,
+              22.485
+            ],
+            [
+              88.052,
+              22.485
+            ],
+            [
+              88.052,
+              21.785
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "DIST_GUJ_01",
+      "properties": {
+        "district_id": "DIST_GUJ_01",
+        "name": "Ahmedabad",
+        "state": "Gujarat",
+        "sub_id": "SUB_21",
+        "centroid_lat": 23.0225,
+        "centroid_lon": 72.5714,
+        "warning_color": "GREEN",
+        "rainfall_24h_mm": 0.0
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.221,
+              22.672
+            ],
+            [
+              72.921,
+              22.672
+            ],
+            [
+              72.921,
+              23.373
+            ],
+            [
+              72.221,
+              23.373
+            ],
+            [
+              72.221,
+              22.672
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "DIST_GUJ_02",
+      "properties": {
+        "district_id": "DIST_GUJ_02",
+        "name": "Kutch",
+        "state": "Gujarat",
+        "sub_id": "SUB_22",
+        "centroid_lat": 23.7337,
+        "centroid_lon": 69.8597,
+        "warning_color": "GREEN",
+        "rainfall_24h_mm": 0.0
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              69.51,
+              23.384
+            ],
+            [
+              70.21,
+              23.384
+            ],
+            [
+              70.21,
+              24.084
+            ],
+            [
+              69.51,
+              24.084
+            ],
+            [
+              69.51,
+              23.384
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "DIST_GUJ_03",
+      "properties": {
+        "district_id": "DIST_GUJ_03",
+        "name": "Rajkot",
+        "state": "Gujarat",
+        "sub_id": "SUB_22",
+        "centroid_lat": 22.3039,
+        "centroid_lon": 70.8022,
+        "warning_color": "GREEN",
+        "rainfall_24h_mm": 0.0
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              70.452,
+              21.954
+            ],
+            [
+              71.152,
+              21.954
+            ],
+            [
+              71.152,
+              22.654
+            ],
+            [
+              70.452,
+              22.654
+            ],
+            [
+              70.452,
+              21.954
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "DIST_ODI_01",
+      "properties": {
+        "district_id": "DIST_ODI_01",
+        "name": "Puri",
+        "state": "Odisha",
+        "sub_id": "SUB_07",
+        "centroid_lat": 19.8135,
+        "centroid_lon": 85.8312,
+        "warning_color": "GREEN",
+        "rainfall_24h_mm": 0.0
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              85.481,
+              19.463
+            ],
+            [
+              86.181,
+              19.463
+            ],
+            [
+              86.181,
+              20.164
+            ],
+            [
+              85.481,
+              20.164
+            ],
+            [
+              85.481,
+              19.463
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "DIST_ODI_02",
+      "properties": {
+        "district_id": "DIST_ODI_02",
+        "name": "Khordha (Bhubaneswar)",
+        "state": "Odisha",
+        "sub_id": "SUB_07",
+        "centroid_lat": 20.2961,
+        "centroid_lon": 85.8245,
+        "warning_color": "GREEN",
+        "rainfall_24h_mm": 0.0
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              85.475,
+              19.946
+            ],
+            [
+              86.174,
+              19.946
+            ],
+            [
+              86.174,
+              20.646
+            ],
+            [
+              85.475,
+              20.646
+            ],
+            [
+              85.475,
+              19.946
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "DIST_TN_01",
+      "properties": {
+        "district_id": "DIST_TN_01",
+        "name": "Chennai",
+        "state": "Tamil Nadu",
+        "sub_id": "SUB_31",
+        "centroid_lat": 13.0827,
+        "centroid_lon": 80.2707,
+        "warning_color": "GREEN",
+        "rainfall_24h_mm": 0.0
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              79.921,
+              12.733
+            ],
+            [
+              80.621,
+              12.733
+            ],
+            [
+              80.621,
+              13.433
+            ],
+            [
+              79.921,
+              13.433
+            ],
+            [
+              79.921,
+              12.733
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "DIST_KAR_01",
+      "properties": {
+        "district_id": "DIST_KAR_01",
+        "name": "Bengaluru Urban",
+        "state": "Karnataka",
+        "sub_id": "SUB_34",
+        "centroid_lat": 12.9716,
+        "centroid_lon": 77.5946,
+        "warning_color": "GREEN",
+        "rainfall_24h_mm": 0.0
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.245,
+              12.622
+            ],
+            [
+              77.945,
+              12.622
+            ],
+            [
+              77.945,
+              13.322
+            ],
+            [
+              77.245,
+              13.322
+            ],
+            [
+              77.245,
+              12.622
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "DIST_KAR_02",
+      "properties": {
+        "district_id": "DIST_KAR_02",
+        "name": "Dakshina Kannada (Mangaluru)",
+        "state": "Karnataka",
+        "sub_id": "SUB_32",
+        "centroid_lat": 12.9141,
+        "centroid_lon": 74.856,
+        "warning_color": "GREEN",
+        "rainfall_24h_mm": 0.0
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              74.506,
+              12.564
+            ],
+            [
+              75.206,
+              12.564
+            ],
+            [
+              75.206,
+              13.264
+            ],
+            [
+              74.506,
+              13.264
+            ],
+            [
+              74.506,
+              12.564
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "DIST_ASS_01",
+      "properties": {
+        "district_id": "DIST_ASS_01",
+        "name": "Kamrup (Guwahati)",
+        "state": "Assam",
+        "sub_id": "SUB_03",
+        "centroid_lat": 26.1445,
+        "centroid_lon": 91.7362,
+        "warning_color": "GREEN",
+        "rainfall_24h_mm": 0.0
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              91.386,
+              25.794
+            ],
+            [
+              92.086,
+              25.794
+            ],
+            [
+              92.086,
+              26.495
+            ],
+            [
+              91.386,
+              26.495
+            ],
+            [
+              91.386,
+              25.794
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "DIST_MP_01",
+      "properties": {
+        "district_id": "DIST_MP_01",
+        "name": "Bhopal",
+        "state": "Madhya Pradesh",
+        "sub_id": "SUB_19",
+        "centroid_lat": 23.2599,
+        "centroid_lon": 77.4126,
+        "warning_color": "GREEN",
+        "rainfall_24h_mm": 0.0
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.063,
+              22.91
+            ],
+            [
+              77.763,
+              22.91
+            ],
+            [
+              77.763,
+              23.61
+            ],
+            [
+              77.063,
+              23.61
+            ],
+            [
+              77.063,
+              22.91
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "DIST_MP_02",
+      "properties": {
+        "district_id": "DIST_MP_02",
+        "name": "Jabalpur",
+        "state": "Madhya Pradesh",
+        "sub_id": "SUB_20",
+        "centroid_lat": 23.1815,
+        "centroid_lon": 79.9864,
+        "warning_color": "GREEN",
+        "rainfall_24h_mm": 0.0
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              79.636,
+              22.831
+            ],
+            [
+              80.336,
+              22.831
+            ],
+            [
+              80.336,
+              23.532
+            ],
+            [
+              79.636,
+              23.532
+            ],
+            [
+              79.636,
+              22.831
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "DIST_RAJ_01",
+      "properties": {
+        "district_id": "DIST_RAJ_01",
+        "name": "Jaipur",
+        "state": "Rajasthan",
+        "sub_id": "SUB_18",
+        "centroid_lat": 26.9124,
+        "centroid_lon": 75.7873,
+        "warning_color": "GREEN",
+        "rainfall_24h_mm": 0.0
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              75.437,
+              26.562
+            ],
+            [
+              76.137,
+              26.562
+            ],
+            [
+              76.137,
+              27.262
+            ],
+            [
+              75.437,
+              27.262
+            ],
+            [
+              75.437,
+              26.562
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "DIST_RAJ_02",
+      "properties": {
+        "district_id": "DIST_RAJ_02",
+        "name": "Jaisalmer",
+        "state": "Rajasthan",
+        "sub_id": "SUB_17",
+        "centroid_lat": 26.9157,
+        "centroid_lon": 70.9083,
+        "warning_color": "GREEN",
+        "rainfall_24h_mm": 0.0
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              70.558,
+              26.566
+            ],
+            [
+              71.258,
+              26.566
+            ],
+            [
+              71.258,
+              27.266
+            ],
+            [
+              70.558,
+              27.266
+            ],
+            [
+              70.558,
+              26.566
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "DIST_UTK_01",
+      "properties": {
+        "district_id": "DIST_UTK_01",
+        "name": "Dehradun",
+        "state": "Uttarakhand",
+        "sub_id": "SUB_12",
+        "centroid_lat": 30.3165,
+        "centroid_lon": 78.0322,
+        "warning_color": "GREEN",
+        "rainfall_24h_mm": 0.0
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.682,
+              29.966
+            ],
+            [
+              78.382,
+              29.966
+            ],
+            [
+              78.382,
+              30.667
+            ],
+            [
+              77.682,
+              30.667
+            ],
+            [
+              77.682,
+              29.966
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "DIST_HP_01",
+      "properties": {
+        "district_id": "DIST_HP_01",
+        "name": "Shimla",
+        "state": "Himachal Pradesh",
+        "sub_id": "SUB_15",
+        "centroid_lat": 31.1048,
+        "centroid_lon": 77.1734,
+        "warning_color": "GREEN",
+        "rainfall_24h_mm": 0.0
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.823,
+              30.755
+            ],
+            [
+              77.523,
+              30.755
+            ],
+            [
+              77.523,
+              31.455
+            ],
+            [
+              76.823,
+              31.455
+            ],
+            [
+              76.823,
+              30.755
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "DIST_JK_01",
+      "properties": {
+        "district_id": "DIST_JK_01",
+        "name": "Srinagar",
+        "state": "Jammu & Kashmir",
+        "sub_id": "SUB_16",
+        "centroid_lat": 34.0837,
+        "centroid_lon": 74.7973,
+        "warning_color": "GREEN",
+        "rainfall_24h_mm": 0.0
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              74.447,
+              33.734
+            ],
+            [
+              75.147,
+              33.734
+            ],
+            [
+              75.147,
+              34.434
+            ],
+            [
+              74.447,
+              34.434
+            ],
+            [
+              74.447,
+              33.734
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "DIST_PUN_01",
+      "properties": {
+        "district_id": "DIST_PUN_01",
+        "name": "Amritsar",
+        "state": "Punjab",
+        "sub_id": "SUB_14",
+        "centroid_lat": 31.634,
+        "centroid_lon": 74.8723,
+        "warning_color": "GREEN",
+        "rainfall_24h_mm": 0.0
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              74.522,
+              31.284
+            ],
+            [
+              75.222,
+              31.284
+            ],
+            [
+              75.222,
+              31.984
+            ],
+            [
+              74.522,
+              31.984
+            ],
+            [
+              74.522,
+              31.284
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "DIST_BIH_01",
+      "properties": {
+        "district_id": "DIST_BIH_01",
+        "name": "Patna",
+        "state": "Bihar",
+        "sub_id": "SUB_09",
+        "centroid_lat": 25.5941,
+        "centroid_lon": 85.1376,
+        "warning_color": "GREEN",
+        "rainfall_24h_mm": 0.0
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              84.788,
+              25.244
+            ],
+            [
+              85.488,
+              25.244
+            ],
+            [
+              85.488,
+              25.944
+            ],
+            [
+              84.788,
+              25.944
+            ],
+            [
+              84.788,
+              25.244
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "DIST_TEL_01",
+      "properties": {
+        "district_id": "DIST_TEL_01",
+        "name": "Hyderabad",
+        "state": "Telangana",
+        "sub_id": "SUB_29",
+        "centroid_lat": 17.385,
+        "centroid_lon": 78.4867,
+        "warning_color": "GREEN",
+        "rainfall_24h_mm": 0.0
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              78.137,
+              17.035
+            ],
+            [
+              78.837,
+              17.035
+            ],
+            [
+              78.837,
+              17.735
+            ],
+            [
+              78.137,
+              17.735
+            ],
+            [
+              78.137,
+              17.035
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "DIST_AP_01",
+      "properties": {
+        "district_id": "DIST_AP_01",
+        "name": "Visakhapatnam",
+        "state": "Andhra Pradesh",
+        "sub_id": "SUB_28",
+        "centroid_lat": 17.6868,
+        "centroid_lon": 83.2185,
+        "warning_color": "GREEN",
+        "rainfall_24h_mm": 0.0
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              82.869,
+              17.337
+            ],
+            [
+              83.569,
+              17.337
+            ],
+            [
+              83.569,
+              18.037
+            ],
+            [
+              82.869,
+              18.037
+            ],
+            [
+              82.869,
+              17.337
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

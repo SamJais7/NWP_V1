@@ -191,3 +191,75 @@ BENCHMARK_CASES = {
         "regime": "MONSOON_BREAK"
     }
 }
+
+# ==============================================================================
+# 7. REAL-WORLD API & PRODUCTION GIS CONFIGURATION (UPDATE.MD)
+# ==============================================================================
+
+import os
+from pathlib import Path
+
+# Load from .env if present
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
+# Geoapify GIS Configuration
+GEOAPIFY_API_KEY = os.getenv("GEOAPIFY_API_KEY", "b47c0ea9171f456187680bb01c29e64a")
+GEOAPIFY_TILE_STYLE = os.getenv("GEOAPIFY_TILE_STYLE", "dark-matter-dark-grey")
+GEOAPIFY_BASE_URL = "https://api.geoapify.com"
+
+# IMD Official API Configuration
+IMD_API_BASE_URL = os.getenv("IMD_API_BASE_URL", "https://mausam.imd.gov.in/api")
+IMD_API_KEY = os.getenv("IMD_API_KEY", "")
+
+# Numerical Forecast Providers & Models
+NWP_FORECAST_PROVIDER = "open-meteo"
+NWP_MODELS = ["ecmwf_ifs025", "gfs_seamless", "ecmwf_aifs025"]
+OPEN_METEO_BASE_URL = "https://api.open-meteo.com/v1"
+OPEN_METEO_HISTORICAL_URL = "https://historical-forecast-api.open-meteo.com/v1"
+
+# Storage Paths
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+DATA_DIR = PROJECT_ROOT / "data"
+REGISTRY_DIR = DATA_DIR / "registry"
+PROCESSED_DIR = DATA_DIR / "processed"
+GEOJSON_DIR = DATA_DIR / "geojson"
+
+STATION_REGISTRY_PATH = str(REGISTRY_DIR / "imd_aws_registry.parquet")
+STATION_REGISTRY_SQLITE = str(REGISTRY_DIR / "imd_aws_registry.db")
+REAL_WORLD_FEATURE_STORE = str(PROCESSED_DIR / "features_real_world.parquet")
+DISTRICTS_GEOJSON_PATH = str(GEOJSON_DIR / "india_districts.geojson")
+
+# Ensure required directories exist
+REGISTRY_DIR.mkdir(parents=True, exist_ok=True)
+PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
+GEOJSON_DIR.mkdir(parents=True, exist_ok=True)
+
+# IMD API Endpoints Catalog
+IMD_API_CATALOG = {
+    # 1. Ground Truth Observations
+    "aws_data": "/aws_data",
+    "aws_data_mapping": "/aws_data_mapping",
+    "districtrainfall": "/districtrainfall",
+    "staterainfall": "/staterainfall",
+    "current_wx": "/current_wx",
+    
+    # 2. Official IMD Forecast Baselines
+    "cityforecast": "/cityforecast",
+    "cityforecastloc": "/cityforecastloc",
+    "cityforecastwarning": "/cityforecastwarning",
+    "subdivision_rainfall_forecast": "/subdivision_rainfall_forecast",
+    "basinqpf": "/basinqpf",
+    
+    # 3. Hazard & Warning Feeds
+    "districtwarning": "/districtwarning",
+    "subdivisionwarning": "/subdivisionwarning",
+    "districtnowcast": "/districtnowcast",
+    "stationnowcast": "/stationnowcast",
+    "coastalbulletin": "/coastalbulletin",
+    "portwarning": "/portwarning",
+    "seabulletin": "/seabulletin"
+}
