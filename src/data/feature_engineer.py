@@ -222,3 +222,12 @@ class HistoricalAnalogEngine:
         neighbor_busts = self.hist_bust_labels[indices[0]]
         bust_prob = float(np.mean(neighbor_busts))
         return bust_prob, indices[0].tolist()
+
+    def match_analogs_batch(self, X: np.ndarray) -> np.ndarray:
+        """
+        Vectorized batch analog matching for entire datasets.
+        """
+        feat = X[:, :8]
+        distances, indices = self.nn_model.kneighbors(feat)
+        neighbor_busts = self.hist_bust_labels[indices]
+        return np.mean(neighbor_busts, axis=1).astype(float)

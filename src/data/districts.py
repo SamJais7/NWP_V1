@@ -4,7 +4,7 @@ Generates multi-level district polygon overlays for Level 2 GIS visualization,
 synchronized with official IMD districtwarning feeds and subdivision hierarchies.
 """
 
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
 import json
 import os
 import numpy as np

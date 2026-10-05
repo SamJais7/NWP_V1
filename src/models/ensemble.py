@@ -29,12 +29,21 @@ class MetaEnsembleStacker:
         self.tabular_model = TabularBustClassifier()
         
         # Meta-learner on stacked OOF probabilities
-        self.meta_learner = LogisticRegression(C=1.0, max_iter=200)
+        self.meta_learner = LogisticRegression(C=1.0, max_iter=200, class_weight="balanced")
         self.calibrator = IsotonicRegression(out_of_bounds="clip", y_min=0.01, y_max=0.99)
+        self.is_meta_fitted = False
         self.is_calibrated = False
+        self.learned_weights: Optional[np.ndarray] = None
+
+    def fit_meta(self, X_meta: np.ndarray, y_true: np.ndarray):
+        """Fits the LogisticRegression meta-learner on genuine out-of-fold base predictions."""
+        self.meta_learner.fit(X_meta, y_true)
+        self.is_meta_fitted = True
+        if hasattr(self.meta_learner, "coef_"):
+            self.learned_weights = self.meta_learner.coef_[0]
 
     def calibrate(self, oof_preds: np.ndarray, y_true: np.ndarray):
-        """Fits isotonic calibrator on out-of-fold validation predictions."""
+        """Fits isotonic calibrator strictly on out-of-fold validation predictions."""
         self.calibrator.fit(oof_preds, y_true)
         self.is_calibrated = True
 
@@ -51,109 +60,105 @@ class MetaEnsembleStacker:
         
         # 1. Rung 1: Climatological
         p_clim = np.array([
-            self.climatology.predict_bust_probability(row["sub_id"], row["lead_day"])
-            for _, row in df_features.iterrows()
+            self.climatology.predict_bust_probability(s, d)
+            for s, d in zip(df_features["sub_id"].values, df_features["lead_day"].values)
         ])
 
         # 2. Rung 2: Ensemble Spread
+        spread_vals = df_features["apcp_spread_mean"].values if "apcp_spread_mean" in df_features else np.ones(n_samples) * 4.0
         p_spread = np.array([
-            self.spread_engine.predict_bust_probability(
-                row.get("apcp_spread_mean", 4.0),
-                row["lead_day"]
-            )
-            for _, row in df_features.iterrows()
+            self.spread_engine.predict_bust_probability(s, d)
+            for s, d in zip(spread_vals, df_features["lead_day"].values)
         ])
 
-        # 3. Rung 3: Analogs
-        p_analog = np.array([
-            self.analog_engine.match_analogs(
-                np.array([
-                    row.get("somali_llj_index", 10.0),
-                    row.get("monsoon_trough_lat", 22.0),
-                    row.get("wd_depth", 0.0),
-                    row.get("apcp_mean", 10.0),
-                    row.get("apcp_spread_mean", 3.0),
-                    row.get("mjo_rmm1", 0.0),
-                    row.get("bsiso_index", 0.0),
-                    row.get("shear_mean", 15.0)
-                ])
-            )[0]
-            for _, row in df_features.iterrows()
-        ])
+        # 3. Rung 3: Analogs (Vectorized)
+        analog_cols = [
+            "somali_llj_index", "monsoon_trough_lat", "wd_depth", "apcp_mean",
+            "apcp_spread_mean", "mjo_amplitude" if "mjo_amplitude" in df_features else "mjo_rmm1",
+            "bsiso_index_1" if "bsiso_index_1" in df_features else "bsiso_index",
+            "shear_mean"
+        ]
+        analog_mat = np.zeros((n_samples, 8))
+        for col_idx, c in enumerate(analog_cols):
+            if c in df_features:
+                analog_mat[:, col_idx] = df_features[c].values
+            else:
+                analog_mat[:, col_idx] = 10.0 if col_idx == 0 else 0.0
+        p_analog = self.analog_engine.match_analogs_batch(analog_mat)
 
         # 4. Rung 4: Tabular GBDT
         p_gbdt = self.tabular_model.predict_proba(df_features)
 
-        # 5. Rung 5: Spatial Model (if provided or default)
-        if spatial_probs is not None and len(spatial_probs) == n_samples:
-            p_spatial = spatial_probs
+        # 5. Rung 5: Learned Meta-Stacker
+        p_spatial = spatial_probs if spatial_probs is not None and len(spatial_probs) == n_samples else p_gbdt
+        if self.is_meta_fitted:
+            if spatial_probs is not None and len(spatial_probs) == n_samples and getattr(self.meta_learner, "n_features_in_", 4) == 5:
+                X_meta = np.column_stack([p_clim, p_spread, p_analog, p_gbdt, p_spatial])
+            else:
+                X_meta = np.column_stack([p_clim, p_spread, p_analog, p_gbdt])
+            stacked_raw = self.meta_learner.predict_proba(X_meta)[:, 1]
         else:
-            p_spatial = p_gbdt * 0.9 + p_spread * 0.1
-
-        # Stacked Meta-Combination (weighted flow-dependent blend)
-        stacked_raw = (
-            0.08 * p_clim +
-            0.18 * p_spread +
-            0.14 * p_analog +
-            0.40 * p_gbdt +
-            0.20 * p_spatial
-        )
+            # Baseline prior blend across Rungs 1 to 4
+            stacked_raw = (
+                0.10 * p_clim +
+                0.20 * p_spread +
+                0.25 * p_analog +
+                0.45 * p_gbdt
+            )
+            if spatial_probs is not None and len(spatial_probs) == n_samples:
+                stacked_raw = 0.85 * stacked_raw + 0.15 * spatial_probs
 
         # Isotonic Calibration
         if self.is_calibrated:
             cal_pred = self.calibrator.predict(stacked_raw)
-            calibrated_bust_prob = np.clip(0.4 * stacked_raw + 0.6 * cal_pred, 0.02, 0.98)
+            calibrated_bust_prob = np.clip(0.3 * stacked_raw + 0.7 * cal_pred, 0.02, 0.98)
         else:
-            # Well-calibrated transformation
             calibrated_bust_prob = np.clip(stacked_raw, 0.03, 0.97)
 
         # Dual Output 1: Calibrated Confidence Index (0–100%)
         # Monotonically degrades from Day 1 to Day 10
         # Confidence = 100 * (1 - Bust_Prob) * Degradation_Curve
-        results = []
-        for idx, (_, row) in enumerate(df_features.iterrows()):
-            lead_d = row["lead_day"]
-            b_prob = float(calibrated_bust_prob[idx])
-            
-            # Theoretical upper bound degrades with lead day (e.g., 95% at Day 1, 55% at Day 10)
-            max_possible_conf = 98.0 - 4.2 * (lead_d - 1)
-            raw_conf = max_possible_conf * (1.0 - 0.75 * b_prob)
-            conf_score = round(float(np.clip(raw_conf, 5.0, 98.0)), 1)
-            b_prob_rounded = round(b_prob, 3)
+        leads = df_features["lead_day"].values
+        b_probs = calibrated_bust_prob
+        max_possible_confs = 98.0 - 4.2 * (leads - 1)
+        raw_confs = max_possible_confs * (1.0 - 0.75 * b_probs)
+        conf_scores = np.round(np.clip(raw_confs, 5.0, 98.0), 1)
+        b_probs_rounded = np.round(b_probs, 3)
 
-            # Operational Alert Classification
-            if b_prob_rounded >= 0.75 or conf_score < 25.0:
-                alert_level = "CRITICAL"
-                alert_color = "#f43f5e"
-                badge = "CRITICAL BUST WARNING"
-            elif b_prob_rounded >= 0.50 or conf_score < 50.0:
-                alert_level = "LOW"
-                alert_color = "#f97316"
-                badge = "LOW CONFIDENCE ALERT"
-            elif b_prob_rounded >= 0.25 or conf_score < 75.0:
-                alert_level = "MODERATE"
-                alert_color = "#eab308"
-                badge = "MODERATE WATCH"
-            else:
-                alert_level = "HIGH"
-                alert_color = "#10b981"
-                badge = "HIGH CONFIDENCE"
+        alert_levels = np.where(
+            (b_probs_rounded >= 0.75) | (conf_scores < 25.0), "CRITICAL",
+            np.where(
+                (b_probs_rounded >= 0.50) | (conf_scores < 50.0), "LOW",
+                np.where(
+                    (b_probs_rounded >= 0.25) | (conf_scores < 75.0), "MODERATE", "HIGH"
+                )
+            )
+        )
+        alert_colors = np.where(
+            alert_levels == "CRITICAL", "#f43f5e",
+            np.where(alert_levels == "LOW", "#f97316",
+                     np.where(alert_levels == "MODERATE", "#eab308", "#10b981"))
+        )
+        badges = np.where(
+            alert_levels == "CRITICAL", "CRITICAL BUST WARNING",
+            np.where(alert_levels == "LOW", "LOW CONFIDENCE ALERT",
+                     np.where(alert_levels == "MODERATE", "MODERATE WATCH", "HIGH CONFIDENCE"))
+        )
 
-            results.append({
-                "sub_id": row["sub_id"],
-                "sub_name": row["sub_name"],
-                "lead_day": lead_d,
-                "lead_hour": row["lead_hour"],
-                "confidence_score": conf_score,
-                "bust_probability": b_prob_rounded,
-                "alert_level": alert_level,
-                "alert_color": alert_color,
-                "alert_badge": badge,
-                "p_clim": round(float(p_clim[idx]), 3),
-                "p_spread": round(float(p_spread[idx]), 3),
-                "p_analog": round(float(p_analog[idx]), 3),
-                "p_gbdt": round(float(p_gbdt[idx]), 3),
-                "p_spatial": round(float(p_spatial[idx]), 3)
-            })
-
-        return pd.DataFrame(results)
+        res_df = pd.DataFrame({
+            "sub_id": df_features["sub_id"].values,
+            "sub_name": df_features["sub_name"].values if "sub_name" in df_features else df_features["sub_id"].values,
+            "lead_day": leads,
+            "lead_hour": df_features["lead_hour"].values if "lead_hour" in df_features else leads * 24,
+            "confidence_score": conf_scores,
+            "bust_probability": b_probs_rounded,
+            "alert_level": alert_levels,
+            "alert_color": alert_colors,
+            "alert_badge": badges,
+            "p_clim": np.round(p_clim, 3),
+            "p_spread": np.round(p_spread, 3),
+            "p_analog": np.round(p_analog, 3),
+            "p_gbdt": np.round(p_gbdt, 3),
+            "p_spatial": np.round(p_spatial, 3)
+        })
+        return res_df

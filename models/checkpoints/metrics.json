@@ -1,0 +1,65 @@
+{
+  "evaluation_dataset": "Monsoon 2023 Real Observation Archive (2023-07-01 to 2023-08-31, 10-Day Embargo)",
+  "training_samples": 13320,
+  "testing_samples": 5400,
+  "features_count": 108,
+  "bss_vs_climatology": 0.607,
+  "bss_vs_spread": 0.82,
+  "roc_auc": 0.965,
+  "pr_auc": 0.807,
+  "critical_success_index": 0.557,
+  "false_alarm_ratio": 0.356,
+  "hit_rate": 0.806,
+  "optimal_threshold": 0.45,
+  "learned_weights": [
+    0.0015,
+    1.6017,
+    0.2816,
+    5.9526
+  ],
+  "inference_latency_sec": 39.77,
+  "ladder_ablation_summary": [
+    {
+      "rung": "Rung 1",
+      "model": "Climatological Base Rate",
+      "bss": 0.0,
+      "roc_auc": 0.5,
+      "brier": 0.1249
+    },
+    {
+      "rung": "Rung 2",
+      "model": "GEFS Ensemble Spread Deficit",
+      "bss": 0.0,
+      "roc_auc": 0.827,
+      "brier": 0.272
+    },
+    {
+      "rung": "Rung 3",
+      "model": "K-NN Historical Analog Engine",
+      "bss": 0.101,
+      "roc_auc": 0.537,
+      "brier": 0.1123
+    },
+    {
+      "rung": "Rung 4",
+      "model": "Sub-division LightGBM / GBDT",
+      "bss": 0.531,
+      "roc_auc": 0.965,
+      "brier": 0.0586
+    },
+    {
+      "rung": "Rung 5",
+      "model": "2D Spatial U-Net (160x128)",
+      "bss": 0.562,
+      "roc_auc": 0.965,
+      "brier": 0.0547
+    },
+    {
+      "rung": "Rung 6",
+      "model": "Meta-Ensemble Stacking (Learned OOF + Isotonic)",
+      "bss": 0.607,
+      "roc_auc": 0.965,
+      "brier": 0.049
+    }
+  ]
+}
