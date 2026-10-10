@@ -256,10 +256,3 @@ The model includes evaluation scenarios for 4 held-out disaster cases:
 4. **Monsoon Extended Break Spell (August 2023)**:
    - Primary Region: Central India / `SUB_20` (East Madhya Pradesh)
    - Synoptic Driver: Monsoon trough shifted to foothills, persistent dry bias.
-
----
-
-## 9. SIH 2026 Presentation Highlights
-1. **Ablation Proof**: Demonstrates quantitative value at every rung from Climatology to Ensemble Stacking.
-2. **Duty Forecaster Actionability**: 10-second workflow from All-India map to 4-section standardized bulletin.
-3. **Modular NCMRWF Ingestion**: `ModelAdapter` interface abstracts GEFS, NCUM, and NEPS data streams.
